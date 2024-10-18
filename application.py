@@ -24,44 +24,6 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
-@app.route('/history')
-def history():
-    # Sample data for bought and sold lists
-    bought_list = [
-        {'symbol': 'AAPL', 'shares_bought': 30, 'price_bought': 150, 'time': '2024-10-01'},
-        {'symbol': 'GOOGL', 'shares_bought': 20, 'price_bought': 2700, 'time': '2024-10-05'},
-        {'symbol': 'TSLA', 'shares_bought': 10, 'price_bought': 900, 'time': '2024-10-10'}
-    ]
-
-    sold_list = [
-        {'symbol': 'AAPL', 'shares_sold': 15, 'price_sold': 160, 'time': '2024-10-12'},
-        {'symbol': 'GOOGL', 'shares_sold': 10, 'price_sold': 2800, 'time': '2024-10-15'}
-    ]
-
-    # Prepare data for the pie chart (just using the bought_list in this case)
-    stock_names = [stock['symbol'] for stock in bought_list]
-    stock_shares = [stock['shares_bought'] for stock in bought_list]
-
-    # Generate the pie chart using Matplotlib
-    fig, ax = plt.subplots()
-    ax.pie(stock_shares, labels=stock_names, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    # Save the pie chart as an image in the static folder
-    piechart_path = os.path.join('static', 'images', 'piechart.png')
-    plt.savefig(piechart_path)
-    plt.close()
-
-    # Render the HTML template, passing the stock data and the pie chart path
-    return render_template(
-        'history.html',
-        bought_list=bought_list,
-        sold_list=sold_list,
-        bought_list_length=len(bought_list),
-        sold_list_length=len(sold_list),
-        piechart_url=piechart_path
-    )
-
 # Custom filter
 application.jinja_env.filters["usd"] = usd
 
